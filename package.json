@@ -11,7 +11,8 @@
     "render": "tsx scripts/render.ts",
     "deliver": "tsx scripts/deliver.ts",
     "shootfull": "tsx scripts/shootfull.ts",
-    "atlas": "tsx scripts/atlas-clip.ts"
+    "atlas": "tsx scripts/atlas-clip.ts",
+    "mouth": "node -e \"require('child_process').execFileSync(process.platform==='win32'?'.venv-tts/Scripts/python':'.venv-tts/bin/python',['scripts/mouth.py',...process.argv.slice(1)],{stdio:'inherit'})\""
   },
   "dependencies": {
     "@elevenlabs/elevenlabs-js": "^2.73.0",

@@ -7,13 +7,13 @@ import { C, fontFamily } from "./ui";
 // so sánh chia đôi màn hình, đường dẫn luồng, con dấu.
 
 // ---------- Phụ đề theo từ ----------
-type Word = { w: string; t0: number; t1: number };
+export type Word = { w: string; t0: number; t1: number };
 
 /**
  * Chia lời đọc thành từ và ước lượng thời điểm từng từ theo số ký tự (tiếng Việt mỗi chữ ~ một âm tiết),
  * cộng thêm khoảng nghỉ ở dấu phẩy / dấu chấm. Không cần nhận dạng giọng nói, nên không bao giờ sai chữ.
  */
-const timeWords = (text: string, start: number, dur: number): Word[] => {
+export const timeWords = (text: string, start: number, dur: number): Word[] => {
   const raw = text.split(/\s+/).filter(Boolean);
   const weight = (w: string) => 1 + w.length * 0.12 + (/[,:;]$/.test(w) ? 0.9 : /[.!?]$/.test(w) ? 1.4 : 0);
   const total = raw.reduce((s, w) => s + weight(w), 0);
@@ -27,7 +27,7 @@ const timeWords = (text: string, start: number, dur: number): Word[] => {
 };
 
 /** Gom từ thành cụm 3–5 chữ, ngắt ở dấu câu để cụm đọc tự nhiên. */
-const chunkWords = (words: Word[], max = 5): Word[][] => {
+export const chunkWords = (words: Word[], max = 5): Word[][] => {
   const chunks: Word[][] = [];
   let cur: Word[] = [];
   for (const w of words) {
