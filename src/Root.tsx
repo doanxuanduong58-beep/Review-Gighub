@@ -1,23 +1,18 @@
-import { Composition } from "remotion";
 import { VideoCompositions } from "./components/layout";
-import { Placeholder } from "./components/ui";
-// import * as myvideo from "./myvideo/data";
-// import { MyVideo } from "./myvideo/Video";
+import * as aivideo from "./aivideo/data";
+import { AiVideo } from "./aivideo/Video";
 
 // Mỗi video: một <VideoCompositions> -> một composition cho mỗi khổ trong data.FORMATS.
 export const RemotionRoot: React.FC = () => {
   return (
     <>
-      {/*
       <VideoCompositions
-        id={myvideo.COMPOSITION_ID}
-        component={MyVideo}
-        formats={myvideo.FORMATS}
-        durationInFrames={Math.round(myvideo.DURATION_S * myvideo.FPS)}
-        fps={myvideo.FPS}
+        id={aivideo.COMPOSITION_ID}
+        component={AiVideo}
+        formats={aivideo.FORMATS}
+        durationInFrames={Math.round(aivideo.DURATION_S * aivideo.FPS)}
+        fps={aivideo.FPS}
       />
-      */}
-      <Composition id="Placeholder" component={Placeholder} durationInFrames={30} fps={30} width={1080} height={1920} />
     </>
   );
 };

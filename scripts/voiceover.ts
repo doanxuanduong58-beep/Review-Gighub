@@ -152,7 +152,9 @@ if (provider === "vieneu") {
   );
   for (const seg of SEGMENTS) {
     const out = `public/${project.audioDir}/${seg.id}.mp3`;
-    ffmpeg(["-i", wav(seg), "-b:a", "192k", out]);
+    // VIENEU_TEMPO (vd 1.1) đọc nhanh hơn mà không đổi cao độ — cho video nhịp nhanh.
+    const tempo = Number(process.env.VIENEU_TEMPO ?? "1");
+    ffmpeg(["-i", wav(seg), ...(tempo !== 1 ? ["-af", `atempo=${tempo}`] : []), "-b:a", "192k", out]);
   }
 }
 

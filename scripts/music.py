@@ -133,13 +133,141 @@ def render(seconds: float) -> np.ndarray:
     return stereo / np.max(np.abs(stereo)) * 10 ** (-1 / 20)
 
 
+# ---------- Kiểu "energetic": nhạc mạnh, nhịp nhanh ----------
+# 140 BPM, La thứ. Kick mọi phách (four-on-the-floor), bass saw nảy ở nửa phách và nén theo kick (sidechain),
+# hợp âm supersaw đánh nhát, hi-hat móc kép, clap + snare phách 2/4. Cứ 8 ô nhịp: ô cuối dồn trống + tiếng
+# "vút" lên, ô đầu đoạn mới có cú nện (impact). Vào trống gần như ngay (sau nửa ô) để video ngắn không bị chậm.
+E_BPM = 140
+E_BEAT = 60 / E_BPM
+E_BAR = 4 * E_BEAT
+
+
+def _kick(rng: np.random.Generator) -> np.ndarray:
+    ln = int(0.32 * SR)
+    t = np.arange(ln) / SR
+    f = 48 + 160 * np.exp(-t * 40)
+    body = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 8)
+    click = rng.standard_normal(ln) * np.exp(-t * 400) * 0.4
+    return np.tanh((body + click) * 2.2) * 0.75
+
+
+def _snare(rng: np.random.Generator, gain: float = 1.0) -> np.ndarray:
+    ln = int(0.22 * SR)
+    t = np.arange(ln) / SR
+    noise = sosfilt(butter(2, [1200, 8000], btype="band", fs=SR, output="sos"), rng.standard_normal(ln)) * np.exp(-t * 18)
+    tone = np.sin(2 * np.pi * 190 * t) * np.exp(-t * 30) * 0.5
+    return (noise * 0.5 + tone) * 0.45 * gain
+
+
+def _hat(rng: np.random.Generator, open_: bool = False) -> np.ndarray:
+    ln = int((0.16 if open_ else 0.04) * SR)
+    t = np.arange(ln) / SR
+    return sosfilt(butter(2, 8000, btype="high", fs=SR, output="sos"), rng.standard_normal(ln)) * np.exp(-t * (25 if open_ else 110)) * (0.14 if open_ else 0.09)
+
+
+def render_energetic(seconds: float) -> np.ndarray:
+    n = int(seconds * SR)
+    rng = np.random.default_rng(11)
+    drums, bass, chords, lead, fx = (np.zeros(n) for _ in range(5))
+    side = np.ones(n)  # đường nén theo kick
+    kick = _kick(rng)
+    bars = int(np.ceil(seconds / E_BAR))
+    lead_pattern = [0, None, 2, None, 1, None, 2, 0, None, 2, None, 1, 2, None, 1, None]
+
+    for b in range(bars):
+        t0 = b * E_BAR
+        chord_set, roots = PROGRESSIONS[(b // 8) % 2]
+        chord, root = chord_set[b % 4], roots[b % 4]
+        fill = b % 8 == 7 and (b + 1) * E_BAR < seconds - E_BAR
+        drop = b % 8 == 0 and b > 0
+
+        # Kick mọi phách (ô dồn trống: bỏ 2 phách cuối để snare roll chiếm chỗ).
+        for k in range(4):
+            if fill and k >= 2:
+                continue
+            tb = t0 + k * E_BEAT
+            add(drums, tb, kick)
+            i = int(tb * SR)
+            ln = int(E_BEAT * 0.9 * SR)
+            j = min(n, i + ln)
+            if i < n:
+                env = 1 - 0.85 * np.exp(-np.arange(j - i) / SR * 9)
+                side[i:j] = np.minimum(side[i:j], env)
+
+        # Clap/snare phách 2 và 4.
+        for k in (1, 3):
+            if not (fill and k == 3):
+                add(drums, t0 + k * E_BEAT, _snare(rng))
+
+        # Hi-hat móc kép, hat mở ở nửa phách.
+        for k in range(16):
+            add(drums, t0 + k * E_BEAT / 4, _hat(rng, open_=(k % 4 == 2)))
+
+        # Dồn trống nửa ô cuối: snare móc kép to dần + tiếng vút lên.
+        if fill:
+            for k in range(8):
+                add(drums, t0 + 2 * E_BEAT + k * E_BEAT / 4, _snare(rng, 0.4 + 0.12 * k))
+            ln = int(E_BAR * SR)
+            t = np.arange(ln) / SR
+            sweep = sosfilt(butter(2, 3000, btype="high", fs=SR, output="sos"), rng.standard_normal(ln))
+            add(fx, t0, sweep * (t / t[-1]) ** 2 * 0.22)
+
+        # Cú nện đầu đoạn mới: sub trầm rơi + crash.
+        if drop:
+            ln = int(1.2 * SR)
+            t = np.arange(ln) / SR
+            boom = np.sin(2 * np.pi * np.cumsum(30 + 60 * np.exp(-t * 6)) / SR) * np.exp(-t * 2.5) * 0.6
+            crash = sosfilt(butter(2, 5000, btype="high", fs=SR, output="sos"), rng.standard_normal(ln)) * np.exp(-t * 3) * 0.18
+            add(fx, t0, boom + crash)
+
+        # Bass saw nảy ở móc kép (trừ nhát trùng kick), lọc thấp cho chắc.
+        for k in range(16):
+            if k % 4 == 0:
+                continue
+            ln = int(E_BEAT / 4 * 0.9 * SR)
+            m = root - 12 + (12 if k % 4 == 2 else 0)
+            sig = (saw(hz(m), ln, -0.003) + saw(hz(m), ln, 0.003)) * 0.5
+            add(bass, t0 + k * E_BEAT / 4, lowpass(sig, 900) * env_adsr(ln, 0.003, 0.08, 0.6, 0.02) * 0.32)
+
+        # Hợp âm supersaw đánh nhát ở nửa phách.
+        for k in range(4):
+            ln = int(E_BEAT * 0.45 * SR)
+            sig = sum(saw(hz(m + 12), ln, d, rng.random()) for m in chord for d in (-0.008, 0.0, 0.008))
+            add(chords, t0 + k * E_BEAT + E_BEAT / 2, lowpass(sig, 4200) * env_adsr(ln, 0.004, 0.15, 0.3, 0.05) * 0.07)
+
+        # Giai điệu pluck móc kép (nghỉ ở ô dồn trống).
+        if not fill:
+            for k, idx in enumerate(lead_pattern):
+                if idx is None:
+                    continue
+                ln = int(E_BEAT / 4 * 0.95 * SR)
+                m = chord[idx] + 24 - (12 if b % 2 and k > 8 else 0)
+                sq = np.sign(np.sin(2 * np.pi * hz(m) * np.arange(ln) / SR))
+                add(lead, t0 + k * E_BEAT / 4, lowpass(sq, 5000) * env_adsr(ln, 0.002, 0.07, 0.15, 0.02) * 0.05)
+
+    t = np.arange(n) / SR
+    intro = np.clip((t - E_BAR / 2 + 0.05) / 0.05, 0, 1)  # nửa ô đầu chỉ hợp âm + giai điệu
+    music = (bass + chords) * side
+    mix_l = drums * intro + music * intro + chords * 0.3 * (1 - intro) + lead * 0.8 + fx
+    mix_r = drums * intro + music * intro + chords * 0.3 * (1 - intro) + lead * 1.2 + fx
+    stereo = np.stack([mix_l, mix_r], axis=1)
+    fade_out = np.clip((seconds - t) / 1.2, 0, 1)
+    stereo *= (np.clip(t / 0.05, 0, 1) * fade_out)[:, None]
+    stereo = np.tanh(stereo * 1.8)  # bão hoà cho dày, to
+    return stereo / np.max(np.abs(stereo)) * 10 ** (-1 / 20)
+
+
+STYLES = {"chill": render, "energetic": render_energetic}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--seconds", type=float, required=True)
     parser.add_argument("--out", required=True)
+    parser.add_argument("--style", choices=sorted(STYLES), default="chill")
     args = parser.parse_args()
-    sf.write(args.out, render(args.seconds), SR)
-    print(f"Saved {args.out} ({args.seconds:.1f}s)")
+    sf.write(args.out, STYLES[args.style](args.seconds), SR)
+    print(f"Saved {args.out} ({args.seconds:.1f}s, {args.style})")
 
 
 if __name__ == "__main__":
