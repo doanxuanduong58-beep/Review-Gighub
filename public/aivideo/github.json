@@ -1,0 +1,35 @@
+{
+  "file": "aivideo/github.png",
+  "page": {
+    "width": 1280,
+    "height": 900
+  },
+  "at": null,
+  "url": "https://github.com/doanxuanduong58-beep/Review-Gighub",
+  "title": "GitHub - doanxuanduong58-beep/Review-Gighub · GitHub",
+  "star": {
+    "x": 1160.71875,
+    "y": 188,
+    "width": 87.28125,
+    "height": 28
+  },
+  "starLabel": "Star0 (0)",
+  "about": {
+    "x": 976,
+    "y": 245,
+    "width": 272,
+    "height": 265
+  },
+  "finds": [
+    {
+      "text": "idea-to-video",
+      "box": {
+        "x": 166.03125,
+        "y": 374.5,
+        "width": 90.234375,
+        "height": 17
+      },
+      "inShot": true
+    }
+  ]
+}
