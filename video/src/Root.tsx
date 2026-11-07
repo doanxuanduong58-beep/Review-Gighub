@@ -5,6 +5,8 @@ import * as wordmcp from "./wordmcp/data";
 import { WordMcpVideo } from "./wordmcp/Video";
 import * as kitviet from "./kitviet/data";
 import { KitVietVideo } from "./kitviet/Video";
+import * as excelmcp from "./excelmcp/data";
+import { ExcelMcpVideo } from "./excelmcp/Video";
 
 // Mỗi video: một <VideoCompositions> -> một composition cho mỗi khổ trong data.FORMATS.
 export const RemotionRoot: React.FC = () => {
@@ -30,6 +32,13 @@ export const RemotionRoot: React.FC = () => {
         formats={kitviet.FORMATS}
         durationInFrames={Math.round(kitviet.DURATION_S * kitviet.FPS)}
         fps={kitviet.FPS}
+      />
+      <VideoCompositions
+        id={excelmcp.COMPOSITION_ID}
+        component={ExcelMcpVideo}
+        formats={excelmcp.FORMATS}
+        durationInFrames={Math.round(excelmcp.DURATION_S * excelmcp.FPS)}
+        fps={excelmcp.FPS}
       />
     </>
   );
