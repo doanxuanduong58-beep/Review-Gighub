@@ -78,6 +78,8 @@ const VIENEU_SAY: [RegExp, string][] = [
   [/\bFFmpeg\b/g, "<en>F F mpeg</en>"],
   // Runtime "Bun" bọc <en> để không đọc kiểu Việt "bun".
   [/\bBun\b/g, "<en>bun</en>"],
+  // "Dify" mặc định thành "di phai" kiểu Việt; tách để ra /dɪf faɪ/ như cách đọc chính thức (07/11/2026).
+  [/\bDify\b/g, "<en>dif fy</en>"],
   [/\bMCP\b/g, "<en>M C P</en>"],
   [/\bECC\b/g, "<en>E C C</en>"],
   [/\bAPI\b/g, "<en>A P I</en>"],
