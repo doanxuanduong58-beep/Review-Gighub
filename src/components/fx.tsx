@@ -45,11 +45,15 @@ const chunkWords = (words: Word[], max = 5): Word[][] => {
  * Phụ đề dưới khung: mỗi lần một cụm, từ đang đọc được một mảng màu `accent` trượt theo (kiểu bút dạ quang).
  * Đặt trong Video.tsx sau các cảnh, cùng segments/starts/durations với Narration.
  */
-export const Captions: React.FC<{ segments: Segment[]; starts: number[]; durations: Record<string, number>; accent?: string }> = ({
+/** Giao diện phụ đề tuỳ chọn (mặc định: hộp tối, chữ sáng). Dùng cho video nền sáng/phong cách riêng. */
+export type CaptionTheme = { font?: string; text?: string; activeText?: string; box?: React.CSSProperties };
+
+export const Captions: React.FC<{ segments: Segment[]; starts: number[]; durations: Record<string, number>; accent?: string; theme?: CaptionTheme }> = ({
   segments,
   starts,
   durations,
   accent = "#D97757",
+  theme = {},
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -69,10 +73,10 @@ export const Captions: React.FC<{ segments: Segment[]; starts: number[]; duratio
     <AbsoluteFill style={{ justifyContent: "flex-end", alignItems: "center", paddingBottom: (L.landscape ? 56 : 200) * k, pointerEvents: "none" }}>
       <div
         style={{
-          fontFamily,
+          fontFamily: theme.font ?? fontFamily,
           fontSize: (L.landscape ? 54 : 52) * k,
           fontWeight: 800,
-          color: C.text,
+          color: theme.text ?? C.text,
           textAlign: "center",
           maxWidth: L.width - L.pad * 2,
           lineHeight: 1.5,
@@ -82,6 +86,7 @@ export const Captions: React.FC<{ segments: Segment[]; starts: number[]; duratio
           textShadow: "0 3px 14px rgba(0,0,0,0.9)",
           transform: `translateY(${rise}px)`,
           opacity: interpolate(rise, [0, 16], [1, 0.2]),
+          ...theme.box,
         }}
       >
         {chunk.map((w, j) => {
@@ -94,7 +99,7 @@ export const Captions: React.FC<{ segments: Segment[]; starts: number[]; duratio
                 padding: `0 ${6 * k}px`,
                 borderRadius: 8 * k,
                 background: on ? accent : "transparent",
-                color: on ? "#0A0D16" : C.text,
+                color: on ? (theme.activeText ?? "#0A0D16") : (theme.text ?? C.text),
                 textShadow: on ? "none" : undefined,
               }}
             >

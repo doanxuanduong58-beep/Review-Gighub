@@ -16,7 +16,8 @@ import type { Segment } from "../src/timeline";
 import { VENV_PYTHON, ffmpeg, loadVideo } from "./video";
 
 const [projectName, ...only] = process.argv.slice(2);
-const { SEGMENTS: ALL } = await loadVideo(projectName);
+const video = (await loadVideo(projectName)) as Awaited<ReturnType<typeof loadVideo>> & { VOICE?: string; VOICE_TEMPO?: number };
+const { SEGMENTS: ALL } = video;
 const SEGMENTS = only.length ? ALL.filter((s) => only.includes(s.id)) : ALL;
 const project = { audioDir: `${projectName}/vo` };
 
@@ -143,7 +144,8 @@ if (provider === "vieneu") {
     [
       "scripts/vieneu_tts.py",
       "--voice",
-      process.env.VIENEU_VOICE ?? "Hải Đăng",
+      // VOICE trong data.ts (giọng riêng của video) > VIENEU_VOICE trong .env > Hải Đăng.
+      video.VOICE ?? process.env.VIENEU_VOICE ?? "Hải Đăng",
       // 0.6 đọc ổn định hơn mặc định 1.0 (đã nghe thử và chọn).
       "--temperature",
       process.env.VIENEU_TEMPERATURE ?? "0.6",
@@ -155,7 +157,7 @@ if (provider === "vieneu") {
   for (const seg of SEGMENTS) {
     const out = `public/${project.audioDir}/${seg.id}.mp3`;
     // VIENEU_TEMPO (vd 1.1) đọc nhanh hơn mà không đổi cao độ — cho video nhịp nhanh.
-    const tempo = Number(process.env.VIENEU_TEMPO ?? "1");
+    const tempo = video.VOICE_TEMPO ?? Number(process.env.VIENEU_TEMPO ?? "1");
     ffmpeg(["-i", wav(seg), ...(tempo !== 1 ? ["-af", `atempo=${tempo}`] : []), "-b:a", "192k", out]);
   }
 }
