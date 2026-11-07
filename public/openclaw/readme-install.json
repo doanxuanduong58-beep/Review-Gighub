@@ -1,0 +1,45 @@
+{
+  "file": "openclaw/readme-install.png",
+  "page": {
+    "width": 1280,
+    "height": 900
+  },
+  "at": "Install",
+  "url": "https://github.com/openclaw/openclaw",
+  "title": "GitHub - openclaw/openclaw: The AI that really does things. Any OS. Any Platform. The lobster way. 🦞 · GitHub",
+  "star": {
+    "x": 1138.5,
+    "y": 188,
+    "width": 109.5,
+    "height": 28
+  },
+  "starLabel": "Star394k (394k)",
+  "about": {
+    "x": 976,
+    "y": 245,
+    "width": 272,
+    "height": 567.5
+  },
+  "finds": [
+    {
+      "text": "install.sh",
+      "box": {
+        "x": 65,
+        "y": 5405.546875,
+        "width": 423.59375,
+        "height": 71.40625
+      },
+      "inShot": false
+    },
+    {
+      "text": "Windows PowerShell",
+      "box": {
+        "x": 81,
+        "y": 5510.953125,
+        "width": 163.171875,
+        "height": 15
+      },
+      "inShot": false
+    }
+  ]
+}
