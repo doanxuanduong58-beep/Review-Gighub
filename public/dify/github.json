@@ -1,0 +1,24 @@
+{
+  "file": "dify/github.png",
+  "page": {
+    "width": 1280,
+    "height": 900
+  },
+  "at": null,
+  "url": "https://github.com/langgenius/dify",
+  "title": "GitHub - langgenius/dify: Build Agentic workflows, RAG pipelines, with rich AI model and tool support on one collaborative workspace. Deploy on cloud, VPC, or self-hosted, so teams move from prototype to production without rebuilding the stack. · GitHub",
+  "star": {
+    "x": 1143.984375,
+    "y": 188,
+    "width": 104.015625,
+    "height": 28
+  },
+  "starLabel": "Star161k (161k)",
+  "about": {
+    "x": 976,
+    "y": 245,
+    "width": 272,
+    "height": 826.5
+  },
+  "finds": []
+}
