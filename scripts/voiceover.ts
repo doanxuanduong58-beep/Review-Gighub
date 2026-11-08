@@ -78,6 +78,8 @@ const VIENEU_SAY: [RegExp, string][] = [
   [/\bFFmpeg\b/g, "<en>F F mpeg</en>"],
   // Runtime "Bun" bọc <en> để không đọc kiểu Việt "bun".
   [/\bBun\b/g, "<en>bun</en>"],
+  // "OpenMAIC" mặc định thành "open mờ a i xê"; đọc chữ cái kiểu Anh (chưa nghe thử, 08/11/2026).
+  [/\bOpenMAIC\b/g, "Open <en>M A I C</en>"],
   [/\bMCP\b/g, "<en>M C P</en>"],
   [/\bECC\b/g, "<en>E C C</en>"],
   [/\bAPI\b/g, "<en>A P I</en>"],
