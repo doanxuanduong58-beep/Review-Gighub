@@ -1,0 +1,25 @@
+{
+  "file": "eduskills/excl.png",
+  "page": {
+    "width": 1280,
+    "height": 900
+  },
+  "at": "Learning Styles",
+  "url": "https://github.com/GarethManning/education-agent-skills/blob/main/docs/EXCLUSIONS.md",
+  "title": "education-agent-skills/docs/EXCLUSIONS.md at main · GarethManning/education-agent-skills · GitHub",
+  "star": null,
+  "starLabel": null,
+  "about": null,
+  "finds": [
+    {
+      "text": "Why excluded",
+      "box": {
+        "x": 370,
+        "y": 215.78125,
+        "width": 115.03125,
+        "height": 20
+      },
+      "inShot": true
+    }
+  ]
+}

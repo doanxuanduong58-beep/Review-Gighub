@@ -1,0 +1,33 @@
+{
+  "name": "video",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "remotion studio src/index.ts",
+    "shoot": "tsx scripts/shoot.ts",
+    "voiceover": "tsx scripts/voiceover.ts",
+    "music": "tsx scripts/music.ts",
+    "render": "tsx scripts/render.ts",
+    "deliver": "tsx scripts/deliver.ts",
+    "shootfull": "tsx scripts/shootfull.ts",
+    "atlas": "tsx scripts/atlas-clip.ts"
+  },
+  "dependencies": {
+    "@elevenlabs/elevenlabs-js": "^2.73.0",
+    "@remotion/cli": "4.0.535",
+    "@remotion/google-fonts": "4.0.535",
+    "@remotion/media-parser": "4.0.535",
+    "dotenv": "^18.0.8",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "remotion": "4.0.535"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "puppeteer-core": "^25.14.0",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "file": "eduskills/skill.png",
+  "page": {
+    "width": 1280,
+    "height": 900
+  },
+  "at": null,
+  "url": "https://github.com/GarethManning/education-agent-skills/blob/main/skills/memory-learning-science/retrieval-practice-generator/SKILL.md",
+  "title": "education-agent-skills/skills/memory-learning-science/retrieval-practice-generator/SKILL.md at main · GarethManning/education-agent-skills · GitHub",
+  "star": null,
+  "starLabel": null,
+  "about": null,
+  "finds": [
+    {
+      "text": "evidence_strength",
+      "box": {
+        "x": 370.5,
+        "y": 729.5,
+        "width": 170.4375,
+        "height": 37
+      },
+      "inShot": true
+    }
+  ]
+}
