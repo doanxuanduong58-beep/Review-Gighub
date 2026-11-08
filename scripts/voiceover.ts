@@ -80,6 +80,10 @@ const VIENEU_SAY: [RegExp, string][] = [
   [/\bBun\b/g, "<en>bun</en>"],
   // "OpenMAIC" mặc định thành "open mờ a i xê"; đọc chữ cái kiểu Anh (chưa nghe thử, 08/11/2026).
   [/\bOpenMAIC\b/g, "Open <en>M A I C</en>"],
+  // PyPSA: README ghi cách đọc "pipes-ah"; mặc định bị đánh vần "py phê ét a" (08/11/2026, chưa nghe thử).
+  [/\bPyPSA\b/g, "<en>pipes ah</en>"],
+  // "N trừ một" (tiêu chuẩn N-1): mặc định "nờ"; đọc chữ N kiểu Anh.
+  [/\bN trừ một\b/g, "<en>N</en> trừ một"],
   [/\bMCP\b/g, "<en>M C P</en>"],
   [/\bECC\b/g, "<en>E C C</en>"],
   [/\bAPI\b/g, "<en>A P I</en>"],
