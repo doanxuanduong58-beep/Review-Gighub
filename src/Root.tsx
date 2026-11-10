@@ -11,6 +11,8 @@ import * as easyteach from "./easyteach/data";
 import { EasyTeachingVideo } from "./easyteach/Video";
 import * as k12skills from "./k12skills/data";
 import { K12SkillsVideo } from "./k12skills/Video";
+import * as pascal from "./pascal/data";
+import { PascalVideo } from "./pascal/Video";
 
 // Mỗi video: một <VideoCompositions> -> một composition cho mỗi khổ trong data.FORMATS.
 export const RemotionRoot: React.FC = () => {
@@ -57,6 +59,13 @@ export const RemotionRoot: React.FC = () => {
         formats={k12skills.FORMATS}
         durationInFrames={Math.round(k12skills.DURATION_S * k12skills.FPS)}
         fps={k12skills.FPS}
+      />
+      <VideoCompositions
+        id={pascal.COMPOSITION_ID}
+        component={PascalVideo}
+        formats={pascal.FORMATS}
+        durationInFrames={Math.round(pascal.DURATION_S * pascal.FPS)}
+        fps={pascal.FPS}
       />
     </>
   );
