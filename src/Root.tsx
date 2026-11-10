@@ -5,6 +5,8 @@ import * as openmaic from "./openmaic/data";
 import { OpenMAICVideo } from "./openmaic/Video";
 import * as pypsa from "./pypsa/data";
 import { PyPSAVideo } from "./pypsa/Video";
+import * as gcompris from "./gcompris/data";
+import { GComprisVideo } from "./gcompris/Video";
 
 // Mỗi video: một <VideoCompositions> -> một composition cho mỗi khổ trong data.FORMATS.
 export const RemotionRoot: React.FC = () => {
@@ -30,6 +32,13 @@ export const RemotionRoot: React.FC = () => {
         formats={pypsa.FORMATS}
         durationInFrames={Math.round(pypsa.DURATION_S * pypsa.FPS)}
         fps={pypsa.FPS}
+      />
+      <VideoCompositions
+        id={gcompris.COMPOSITION_ID}
+        component={GComprisVideo}
+        formats={gcompris.FORMATS}
+        durationInFrames={Math.round(gcompris.DURATION_S * gcompris.FPS)}
+        fps={gcompris.FPS}
       />
     </>
   );

@@ -84,6 +84,9 @@ const VIENEU_SAY: [RegExp, string][] = [
   [/\bPyPSA\b/g, "<en>pipes ah</en>"],
   // "N trừ một" (tiêu chuẩn N-1): mặc định "nờ"; đọc chữ N kiểu Anh.
   [/\bN trừ một\b/g, "<en>N</en> trừ một"],
+  // GCompris (gốc Pháp "J'ai compris"): mặc định "gờ compris"; phiên âm Việt (10/11/2026, chưa nghe thử).
+  [/\bGCompris\b/g, "Giê com pờ ri"],
+  [/\bKDE\b/g, "<en>K D E</en>"],
   [/\bMCP\b/g, "<en>M C P</en>"],
   [/\bECC\b/g, "<en>E C C</en>"],
   [/\bAPI\b/g, "<en>A P I</en>"],

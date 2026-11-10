@@ -1,0 +1,24 @@
+{
+  "file": "gcompris/repo.png",
+  "page": {
+    "width": 1280,
+    "height": 900
+  },
+  "at": null,
+  "url": "https://github.com/gcompris/GCompris-qt",
+  "title": "GitHub - gcompris/GCompris-qt: GCompris in Qt Quick - Mirror of https://invent.kde.org/education/gcompris · GitHub",
+  "star": {
+    "x": 1145.8125,
+    "y": 188,
+    "width": 102.1875,
+    "height": 28
+  },
+  "starLabel": "Star266 (266)",
+  "about": {
+    "x": 976,
+    "y": 245,
+    "width": 272,
+    "height": 347
+  },
+  "finds": []
+}
