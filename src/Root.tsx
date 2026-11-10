@@ -13,6 +13,8 @@ import * as k12skills from "./k12skills/data";
 import { K12SkillsVideo } from "./k12skills/Video";
 import * as pascal from "./pascal/data";
 import { PascalVideo } from "./pascal/Video";
+import * as opentakeoff from "./opentakeoff/data";
+import { OpenTakeoffVideo } from "./opentakeoff/Video";
 
 // Mỗi video: một <VideoCompositions> -> một composition cho mỗi khổ trong data.FORMATS.
 export const RemotionRoot: React.FC = () => {
@@ -66,6 +68,13 @@ export const RemotionRoot: React.FC = () => {
         formats={pascal.FORMATS}
         durationInFrames={Math.round(pascal.DURATION_S * pascal.FPS)}
         fps={pascal.FPS}
+      />
+      <VideoCompositions
+        id={opentakeoff.COMPOSITION_ID}
+        component={OpenTakeoffVideo}
+        formats={opentakeoff.FORMATS}
+        durationInFrames={Math.round(opentakeoff.DURATION_S * opentakeoff.FPS)}
+        fps={opentakeoff.FPS}
       />
     </>
   );
