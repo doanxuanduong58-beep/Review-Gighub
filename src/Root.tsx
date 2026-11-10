@@ -7,6 +7,8 @@ import * as pypsa from "./pypsa/data";
 import { PyPSAVideo } from "./pypsa/Video";
 import * as gcompris from "./gcompris/data";
 import { GComprisVideo } from "./gcompris/Video";
+import * as easyteach from "./easyteach/data";
+import { EasyTeachingVideo } from "./easyteach/Video";
 
 // Mỗi video: một <VideoCompositions> -> một composition cho mỗi khổ trong data.FORMATS.
 export const RemotionRoot: React.FC = () => {
@@ -39,6 +41,13 @@ export const RemotionRoot: React.FC = () => {
         formats={gcompris.FORMATS}
         durationInFrames={Math.round(gcompris.DURATION_S * gcompris.FPS)}
         fps={gcompris.FPS}
+      />
+      <VideoCompositions
+        id={easyteach.COMPOSITION_ID}
+        component={EasyTeachingVideo}
+        formats={easyteach.FORMATS}
+        durationInFrames={Math.round(easyteach.DURATION_S * easyteach.FPS)}
+        fps={easyteach.FPS}
       />
     </>
   );
