@@ -9,6 +9,8 @@ import * as gcompris from "./gcompris/data";
 import { GComprisVideo } from "./gcompris/Video";
 import * as easyteach from "./easyteach/data";
 import { EasyTeachingVideo } from "./easyteach/Video";
+import * as k12skills from "./k12skills/data";
+import { K12SkillsVideo } from "./k12skills/Video";
 
 // Mỗi video: một <VideoCompositions> -> một composition cho mỗi khổ trong data.FORMATS.
 export const RemotionRoot: React.FC = () => {
@@ -48,6 +50,13 @@ export const RemotionRoot: React.FC = () => {
         formats={easyteach.FORMATS}
         durationInFrames={Math.round(easyteach.DURATION_S * easyteach.FPS)}
         fps={easyteach.FPS}
+      />
+      <VideoCompositions
+        id={k12skills.COMPOSITION_ID}
+        component={K12SkillsVideo}
+        formats={k12skills.FORMATS}
+        durationInFrames={Math.round(k12skills.DURATION_S * k12skills.FPS)}
+        fps={k12skills.FPS}
       />
     </>
   );
