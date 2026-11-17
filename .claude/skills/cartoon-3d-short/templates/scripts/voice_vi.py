@@ -70,6 +70,27 @@ def norm(s):
     return re.sub(r"[^\w\s]", " ", s.lower()).split()
 
 
+def split_digits(toks, line, n):
+    """Whisper writes spoken numbers as digits ("12888,"): replace such a token by the script's spelled syllables
+    ("một nghìn hai trăm tám mươi tám"), spread evenly over its span, so words.json stays one entry per syllable."""
+    script = norm(line)
+    out, j = [], 0
+    for k, (txt, s, e) in enumerate(toks):
+        if re.search(r"\d", txt):
+            nxt = next((norm(t[0])[0] for t in toks[k + 1:] if norm(t[0]) and not re.search(r"\d", t[0])), None)
+            m = j
+            while m < len(script) and script[m] != nxt:
+                m += 1
+            syl = script[j:m] or [txt]
+            d = (e - s) / len(syl)
+            out += [{"w": w, "s": round(s + q * d, 3), "e": round(s + (q + 1) * d, 3), "line": n} for q, w in enumerate(syl)]
+            j = m
+        else:
+            out.append({"w": txt, "s": round(s, 3), "e": round(e, 3), "line": n})
+            j += len(norm(txt))
+    return out
+
+
 def align(y, lines, starts, folder):
     from faster_whisper import WhisperModel
 
@@ -82,15 +103,16 @@ def align(y, lines, starts, folder):
         seg = y16[int(a * 16000):int(b * 16000)]
         segs, _ = model.transcribe(seg, language="vi", word_timestamps=True, initial_prompt=line,
                                    vad_filter=False, condition_on_previous_text=False)
-        heard = []
+        heard, toks = [], []
         for s in segs:
             for w in s.words or []:
                 txt = w.word.strip()
-                if not txt:
-                    continue
-                heard.append(txt)
-                words.append({"w": txt, "s": round(a + w.start, 3), "e": round(a + w.end, 3), "line": i + 1})
-        ok = norm(line) == norm(" ".join(heard))
+                if txt:
+                    heard.append(txt)
+                    toks.append((txt, a + w.start, a + w.end))
+        words += split_digits(toks, line, i + 1)
+        ok = norm(line) == norm(" ".join(heard)) or (any(re.search(r"\d", h) for h in heard) and
+                                                      [w["w"].lower().strip(",.?!…") for w in words if w["line"] == i + 1] == norm(line))
         rows.append((i + 1, ok, line, " ".join(heard)))
     with open(os.path.join(folder, "words.json"), "w", encoding="utf-8") as f:
         json.dump(words, f, ensure_ascii=False, indent=1)
