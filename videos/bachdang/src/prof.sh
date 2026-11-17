@@ -1,6 +1,11 @@
 #!/bin/bash
-# frames 100-111: 12 frames per config; first frames include world build
+# per config: 1-frame run (startup) and 9-frame run; marginal = (t9 - t1) / 8
 cd /workspace/bachdang-remotion
-for P in '{"post":{"msaa":0}}' '{"post":{"msaa":0,"ink":false}}' '{"post":{"msaa":0,"lens":false,"bloom":false}}' '{"post":{"msaa":0,"ink":false,"lens":false,"bloom":false,"grade":false}}'; do
-  PROPS="$P" timeout 900 node scripts/clip.mjs BachDangShort out/prof.mp4 100 111 1 1 2>&1 | grep -E "^(6|12|done)"
-done
+run() { local P="$1" S="$2"; local a b
+  a=$(PROPS="$P" timeout 900 node scripts/clip.mjs BachDangShort out/prof.mp4 100 100 $S 1 2>&1 | grep -oP "^done \K[0-9]+")
+  b=$(PROPS="$P" timeout 1500 node scripts/clip.mjs BachDangShort out/prof.mp4 100 108 $S 1 2>&1 | grep -oP "^done \K[0-9]+")
+  echo "CFG $P scale=$S t1=$a t9=$b per=$(( (b - a) / 8 ))s"; }
+run '{"post":{"msaa":2}}' 1
+run '{"post":{"msaa":2,"ink":false}}' 1
+run '{"post":{"msaa":2,"lens":false,"bloom":false}}' 1
+run '{"post":{"msaa":2,"dpr":0.5}}' 0.5

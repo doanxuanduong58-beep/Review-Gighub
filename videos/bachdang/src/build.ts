@@ -432,7 +432,7 @@ export const prop = (b: Batch, kit: Kit, name: string, x: number, y: number, z: 
     const rad = vegRad(vk, h);
     if (inTheWay(x - rad, x + rad, y, y + h, z - rad, z + rad, true)) return;
     const d = Math.hypot(x, z);
-    addVeg(b, vk, x, y, z, h, x * 92.7 + z * 31.3 + yaw * 1000, d > 200 ? 2 : Math.abs(z) > 45 && d > 60 ? 1 : 0);
+    addVeg(b, vk, x, y, z, h, x * 92.7 + z * 31.3 + yaw * 1000, vegQ ? vegQ(x, z) : d > 200 ? 2 : Math.abs(z) > 45 && d > 60 ? 1 : 0);
     return;
   }
   const o = kit[name];
@@ -704,3 +704,7 @@ export const buildTown = (root: THREE.Object3D, kit: Kit, rays: Ray[] = []) => {
 
 /** sight lines for prop()'s "is it in the way of a camera" test (Bach Dang world sets them before placing scenery) */
 export const setSight = (rays: Ray[]) => { sight = rays; };
+
+/** level of detail for cartoon plants (0 near .. 2 far); the Bạch Đằng world sets it from the distance to its sets */
+let vegQ: ((x: number, z: number) => number) | null = null;
+export const setVegQ = (f: (x: number, z: number) => number) => { vegQ = f; };

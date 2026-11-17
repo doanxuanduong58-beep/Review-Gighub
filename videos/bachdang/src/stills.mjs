@@ -8,10 +8,11 @@ const chromiumOptions = { gl: "swangle" };
 const t0 = Date.now();
 const serveUrl = await bundle({ entryPoint: path.resolve(process.env.ENTRY || "src/index.ts"), publicDir: path.resolve("public") });
 console.log("bundle", ((Date.now() - t0) / 1000).toFixed(1) + "s");
-const composition = await selectComposition({ serveUrl, id: comp, browserExecutable, chromiumOptions, timeoutInMilliseconds: 300000 });
+const inputProps = process.env.PROPS ? JSON.parse(process.env.PROPS) : { post: { msaa: 0 } };
+const composition = await selectComposition({ serveUrl, id: comp, browserExecutable, chromiumOptions, timeoutInMilliseconds: 300000, inputProps });
 const onBrowserLog = (l) => { if (l.type === "error") console.log("[err]", l.text.slice(0, 300)); };
 for (const f of frames.split(",").map(Number)) {
   const t = Date.now();
-  await renderStill({ composition, serveUrl, frame: f, output: `${prefix}${f}.jpg`, imageFormat: "jpeg", jpegQuality: 88, scale: Number(scale), browserExecutable, chromiumOptions, timeoutInMilliseconds: 600000, onBrowserLog });
+  await renderStill({ composition, serveUrl, frame: f, output: `${prefix}${f}.jpg`, imageFormat: "jpeg", jpegQuality: 88, scale: Number(scale), inputProps, browserExecutable, chromiumOptions, timeoutInMilliseconds: 600000, onBrowserLog });
   console.log("still", f, ((Date.now() - t) / 1000).toFixed(1) + "s");
 }

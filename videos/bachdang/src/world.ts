@@ -2,7 +2,7 @@
 // karsts, the stake field, Yuan junks and Đại Việt boats, the sand table, the carpet-over-spikes table, the Yuan camp,
 // Trần Hưng Đạo's hill and the 2019 areca plot. update(id, f, camera) poses everything (pure function of id + f).
 import * as THREE from "three";
-import { Batch, boxGeo, V, lam, Ray, setSight, prop, quad } from "./build";
+import { Batch, boxGeo, V, lam, Ray, setSight, setVegQ, prop, quad } from "./build";
 import { beam, ctex, rng, grassHD, waterNear, waterFar, cloudHD } from "./paint";
 import { Pen } from "./toon";
 import { LIGHTS, LOOK, LightPreset } from "./lights";
@@ -260,6 +260,9 @@ export class World {
       this.clouds.push(m); R.add(m);
     }
     setSight(sightLines());
+    // plants near a camera get round lobes, the rest the coarse ones (SwiftShader renders every triangle 3x a frame)
+    const CAMPTS = SHOTS.flatMap((sh) => [sh.a, (sh.a + sh.b) >> 1].map((f) => camAt(sh.id, f).pos));
+    setVegQ((x, z) => { const d = Math.min(...CAMPTS.map((c) => Math.hypot(x - c[0], z - c[2]))); return d < 25 ? 0 : d < 70 ? 1 : 2; });
 
     // ---- land: mud bed + slopes, grassy banks with hills ----
     const b = new Batch();
@@ -297,8 +300,8 @@ export class World {
     });
     // ---- vegetation: bank trees + mangrove bushes on the slopes ----
     const rv = rng(31);
-    for (let i = 0; i < 520; i++) {
-      const x = -880 + rv() * 1860, s = rv() < 0.5 ? -1 : 1, near = rv() < 0.45;
+    for (let i = 0; i < 300; i++) {
+      const x = -700 + rv() * 1500, s = rv() < 0.5 ? -1 : 1, near = rv() < 0.45;
       const z = s * (near ? BANK_Z - 6 + rv() * 5 : BANK_Z + 4 + rv() * 120);
       if (Math.hypot(x - FARM[0], z - FARM[2]) < 22 || Math.hypot(x - SB[0], z - SB[2]) < 12 || Math.hypot(x - CT[0], z - CT[2]) < 8 || Math.hypot(x - CAMP[0], z - CAMP[2]) < 14 || Math.hypot(x - THD[0], z - THD[2]) < 9) continue;
       const kind = near ? "plant_bushLarge" : ["tree_oak", "tree_fat", "tree_default", "plant_bushLarge"][Math.floor(rv() * 4)];
@@ -323,9 +326,9 @@ export class World {
     for (const [dx, dz] of [[-0.9, 0.6], [-0.3, -0.7], [0.4, 0.75]] as const)
       b.add(new THREE.SphereGeometry(0.22, 12, 6, 0, Math.PI * 2, 0, Math.PI / 2).scale(1, 0.35, 1).translate(SB[0] + dx, SB[1] + TABLE_H, SB[2] + dz), lam("mapHill", () => ({ color: "#7fa25a" })));
     // yard dressing: a war drum and a weapon rack behind the table, a tent
-    b.add(new THREE.CylinderGeometry(0.55, 0.55, 0.7, 20).rotateZ(Math.PI / 2).translate(SB[0] - 2.6, SB[1] + 0.9, SB[2] - 3.2), lam("drum", () => ({ color: "#a8342c" })));
-    b.add(new THREE.ConeGeometry(4.2, 4.5, 6).translate(SB[0] + 1.5, SB[1] + 2.25, SB[2] - 9), lam("tentRed", () => ({ color: "#b9473a" })));
-    for (let k = 0; k < 5; k++) b.add(new THREE.CylinderGeometry(0.03, 0.03, 2.6).rotateZ(0.12).translate(SB[0] + 3.0 + k * 0.25, SB[1] + 1.3, SB[2] - 3.6), lam("pole", () => ({ color: "#6e4a32" })));
+    b.add(new THREE.CylinderGeometry(0.55, 0.55, 0.7, 20).rotateZ(Math.PI / 2).translate(SB[0] + 0.5, SB[1] + 0.9, SB[2] - 8.5), lam("drum", () => ({ color: "#a8342c" })));
+    b.add(new THREE.ConeGeometry(4.2, 4.5, 6).translate(SB[0] - 5, SB[1] + 2.25, SB[2] - 17), lam("tentRed", () => ({ color: "#b9473a" })));
+    for (let k = 0; k < 5; k++) b.add(new THREE.CylinderGeometry(0.03, 0.03, 2.6).rotateZ(0.12).translate(SB[0] + 4.0 + k * 0.25, SB[1] + 1.3, SB[2] - 10), lam("pole", () => ({ color: "#6e4a32" })));
     // map flags: three navy (dropped in, later pulled out) and the red one (planted on the last word)
     const pin = new THREE.CylinderGeometry(0.008, 0.008, 0.32).translate(0, 0.16, 0);
     const mkFlag = (col: string) => {
@@ -335,8 +338,8 @@ export class World {
       g.traverse((o) => { o.castShadow = true; o.receiveShadow = true; });
       R.add(g); return g;
     };
-    for (let k = 0; k < 3; k++) this.mapFlags.push(mkFlag("#24324e"));
-    this.redFlagG = mkFlag("#c8302c"); this.redFlagG.scale.setScalar(1.25);
+    for (let k = 0; k < 3; k++) { const fl = mkFlag("#24324e"); fl.scale.setScalar(2); this.mapFlags.push(fl); }
+    this.redFlagG = mkFlag("#c8302c"); this.redFlagG.scale.setScalar(2.6);
     // ---- carpet over a bed of spikes ----
     tableAt(CT, 2.6, 1.4);
     const spikes = new THREE.InstancedMesh(new THREE.ConeGeometry(0.035, 0.17, 6).translate(0, 0.085, 0), lam("spike", () => ({ color: "#8a6a48" })), 15 * 7);

@@ -572,7 +572,7 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
       arms.push({ pts: [S, [tcx + 1.1 * T.a + 12 * u, S[1] - 0.25 * HH], [tcx + 1.05 * T.a + 18 * u, S[1] - 0.7 * HH]], front: true });
     } else if (prop === "chin") { // hand to chin, thinking
       const S = sh(1);
-      arms.push({ pts: [S, [tcx + 0.95 * T.a + 6 * u, S[1] + 0.32 * HH], [300 + 14 * u * (facing || 1), chin - 2 * u]], front: true });
+      arms.push({ pts: [S, [tcx + 1.05 * T.a + 8 * u, S[1] + 0.3 * HH], [300 + 30 * u, chin + 8 * u]], front: true });
     } else if (Array.isArray(prop)) {
       const S = sh(1), k = clamp(prop[1], 0, 1);
       const E = lerp2([tcx + 1.1 * T.a + 10 * u, S[1] - 0.15 * HH], [tcx + 1.2 * T.a + 10 * u, S[1] + 0.3 * HH], k);

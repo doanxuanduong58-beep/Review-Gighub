@@ -284,13 +284,13 @@ const S6b = (f: number) => dolly([CAMP[0] + 7.5, CAMP[1] + 4.2, CAMP[2] - 10.5],
 const S7a = (f: number) => dolly([THD[0] - 3.4, THD[1] + 1.9, THD[2] - 4.2], [THD[0] + 0.2, THD[1] + 1.55, THD[2] + 0.2], pushK(f, F(16.6), 0.002), { fov: 38 });
 const S7b = (f: number) => dolly([THD[0] - 2.2, THD[1] + 2.6, THD[2] - 5.6], [THD[0] + 14, THD[1] - 6, THD[2] + 60], pushK(f, F(19.6), 0.0015), { fov: 44, roll: 0.03 });
 // shot 8: the ghost beside him (two-shot), push on "ba trăm năm mươi năm trước"
-const S8a = (f: number) => dolly([THD[0] + 1.0, THD[1] + 1.8, THD[2] + 5.8], [THD[0] - 0.6, THD[1] + 1.35, THD[2]], pushK(f, F(20.85), 0.002, 0.005, 30), { fov: 38 });
+const S8a = (f: number) => dolly([THD[0] - 4.2, THD[1] + 2.4, THD[2] - 4.0], [THD[0] - 0.6, THD[1] + 1.3, THD[2]], pushK(f, F(20.85), 0.002, 0.005, 30), { fov: 38 });
 // shot 9: low tide, stake drivers; wide over the field; the tide comes in
 const S9a = (f: number) => dolly([-5, LOW + 1.6, -36.5], [-8.6, LOW + 1.0, -30.2], pushK(f, F(24.35), 0.0025), { fov: 40, roll: -0.03 });
 const S9b = (f: number) => dolly([-9.4, LOW + 1.4, -27.6], [-8.4, LOW + 0.9, -31.3], pushK(f, F(26.8), 0.003), { fov: 36 });
 const S9c = (f: number) => dolly([-38, 9, -58], [2, -1.5, -4], pushK(f, F(28.5), 0.0018), { fov: 44 });
 // shot 10: the lure (boats from the camera side), then the chasing fleet over the hidden field
-const S10a = (f: number) => dolly([58, 1.5, -16], [36, 1.2, -2], pushK(f, F(31.05), 0.002), { fov: 42 });
+const S10a = (f: number) => dolly([48, 2.0, -24], [34, 1.0, -3], pushK(f, F(31.05), 0.002), { fov: 42 });
 const S10b = (f: number) => dolly([30, 6, -48], [-18, 1.5, 0], pushK(f, F(W.hamDoi - 0.1), 0.002, 0.005, 30), { fov: 44, roll: 0.03 });
 // shot 11: the ebb (tide gauge + stakes), the flagship hits (kick), the pile-up
 const S11a = (f: number) => dolly([18, 0.8, -40], [10, -0.6, -31], pushK(f, F(36.3), 0.003), { fov: 40 });
@@ -300,8 +300,8 @@ const S11c = (f: number) => dolly([30, 14, -40], [-12, -1, 0], pushK(f, F(W.macK
 const S12a = (f: number) => { const m = onJunk(0, 12, T(f), add(OMN_MAST, [0, 1.6, 0])); return dolly([m[0] + 2.0, m[1] - 0.7, m[2] - 5.6], m, pushK(f, F(41.9), 0.0022), { fov: 38, roll: 0.03 }); };
 const S12b = (f: number) => { const m = onJunk(0, 12, T(f), add(OMN_MAST, [0, 0.4, 0])); return dolly([m[0] + 4.6, m[1] - 1.4, m[2] - 7.6], [m[0] + 0.8, m[1] - 0.6, m[2] - 1.5], pushK(f, F(44.2), 0.0025, 0.005, 30), { fov: 40, roll: -0.03 }); };
 // shot 13: the carpet table, then the yank
-const S13a = (f: number) => dolly([CT[0] + 1.8, CT[1] + 1.9, CT[2] + 2.6], [CT[0], CT[1] + TABLE_H + 0.1, CT[2]], pushK(f, F(46.2), 0.0022), { fov: 40 });
-const S13b = (f: number) => dolly([CT[0] + 1.1, CT[1] + 1.35, CT[2] + 2.0], [CT[0] - 0.1, CT[1] + TABLE_H + 0.05, CT[2]], pushK(f, F(W.dungGio - 0.6), 0.003, 0.006, 30), { fov: 38, roll: 0.035 });
+const S13a = (f: number) => dolly([CT[0] - 0.4, CT[1] + 2.0, CT[2] + 4.6], [CT[0] - 1.25, CT[1] + 1.1, CT[2]], pushK(f, F(46.2), 0.0022), { fov: 40 });
+const S13b = (f: number) => dolly([CT[0] - 1.0, CT[1] + 1.7, CT[2] + 3.6], [CT[0] - 1.45, CT[1] + 1.15, CT[2]], pushK(f, F(W.dungGio - 0.6), 0.003, 0.006, 30), { fov: 38, roll: 0.035 });
 // shot 14: back to the table
 const S14a = (f: number) => dolly([SB[0] + 1.6, SB[1] + TABLE_H + 1.25, SB[2] + 1.9], [SB[0] + 0.2, SB[1] + TABLE_H + 0.05, SB[2] - 0.05], pushK(f, F(53.5), 0.0022, 0.005, 30), { fov: 38 });
 // shot 15: golden, low tide, stake tips in the mud: a slow skim
