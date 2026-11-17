@@ -31,3 +31,8 @@ Claude then follows `SKILL.md`: topic and facts, then script, then voice, then t
 
 ## License
 The code and docs are MIT (see `LICENSE`). The reference frames are included for style study only.
+
+## Bản tiếng Việt (bản sửa trong repo này)
+- Lời đọc, kịch bản, tiêu đề/mô tả/hashtag đều bằng tiếng Việt; giọng VieNeu-TTS chạy local (mặc định "Hải Đăng").
+- `templates/scripts/voice_vi.py`: `lines.txt` → `voice.wav` + `words.json` (mốc từng âm tiết, qua faster-whisper) + `check.md` soát đọc sai.
+- Kịch bản mẫu: `templates/SCRIPT_example_vi.md` (~268 âm tiết ≈ 67 s).

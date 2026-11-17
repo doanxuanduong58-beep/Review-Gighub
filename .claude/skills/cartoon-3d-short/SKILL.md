@@ -1,6 +1,6 @@
 ---
 name: cartoon-3d-short
-description: Make a ~55-70 s vertical cartoon story short in the "2D characters in a colourful 3D world" style (flat bean-head cartoon cards with ink outlines, painted 3D town/world with black ink lines, saturated sky, depth-of-field backgrounds, gliding cameras, voice narration, synthesized SFX + march-style music), rendered with three.js inside Remotion. Proven on "The Bridge That Fell for a Song" (2026-10-31). Use when the user asks for another video "like the bridge video", "like the soldiers/bridge short", "in that cartoon 3D style", a history/science story short with cartoon characters in 3D, or says "use the cartoon short skill".
+description: Make a ~55-70 s vertical cartoon story short NARRATED IN VIETNAMESE (VieNeu-TTS voice) in the "2D characters in a colourful 3D world" style (flat bean-head cartoon cards with ink outlines, painted 3D town/world with black ink lines, saturated sky, depth-of-field backgrounds, gliding cameras, Vietnamese voice narration, synthesized SFX + march-style music), rendered with three.js inside Remotion. Proven on "The Bridge That Fell for a Song" (2026-10-31). Use when the user asks for another video "like the bridge video", "like the soldiers/bridge short", "in that cartoon 3D style", a history/science story short with cartoon characters in 3D, or says "use the cartoon short skill" — including Vietnamese requests like "làm video hoạt hình", "short hoạt hình 3D kể chuyện", "video giống video cây cầu", "dùng skill cartoon short".
 ---
 
 # Cartoon 3D story short (three.js + Remotion)
@@ -17,7 +17,10 @@ The style reference is a channel studied privately (`references/`: STYLE_BIBLE.m
 
 User rules that apply:
 - No captions or labels in the video.
-- English only.
+- **Tiếng Việt.** Voice-over, script, title, description and hashtags are Vietnamese. The bridge source and these
+  notes stay in English; only the spoken/published words change. Any sign or prop text in the world is Vietnamese
+  (or textless). English only if the user explicitly asks for an English version.
+- Voice: VieNeu-TTS (local, free), default **Hải Đăng**, temperature 0.6 — or the voice the user picked.
 - Voice: one steady tone.
 - Jokes are researched real facts.
 - Standard mix: music +3 dB, SFX -6 dB, voice unchanged.
@@ -29,18 +32,32 @@ User rules that apply:
 ## Pipeline
 1. **Topic and facts.** Pick one surprising true story with a physical cause and effect (it should be visual), plus a simple everyday analogy that explains it.
    - Write the facts with their source at the top of `SCRIPT.md`.
-2. **Script** (~3.7 words/s, 55-70 s). Beat formula from the bridge short:
-   - **Hook:** the absurd fact in one line ("Seventy-four soldiers knocked down an iron bridge just by walking across it.").
+2. **Script** in Vietnamese: ~4 âm tiết/s with VieNeu at temperature 0.6 → about 220-280 syllables for 55-70 s
+   (count syllables, not words; measure after the first voice pass and trim). Plain spoken Vietnamese, short
+   sentences, no Hán-Việt jargon unless the next clause explains it; numbers written as they are read
+   ("bảy mươi tư", "năm 1831" → "năm một nghìn tám trăm ba mươi mốt"). Foreign names: Vietnamise or avoid
+   (see `idea-to-video/references/voice.md` for VieNeu pronunciation traps). Example: `templates/SCRIPT_example_vi.md`.
+   Beat formula from the bridge short:
+   - **Hook:** the absurd fact in one line ("Bảy mươi tư người lính đã làm sập một cây cầu sắt, chỉ bằng cách… đi bộ qua nó.").
    - **Setting:** year, place, pride.
    - **Action:** escalation over three or four beats, each a little bigger.
    - **Snap:** the moment it breaks.
-   - **Deadpan double line:** "Luckily ... / Unluckily ...".
+   - **Deadpan double line:** "May mà ... / Xui là ..." (same fact twice: "May mà sông chỉ sâu nửa mét. / Xui là sông chỉ sâu nửa mét.").
    - **Explanation:** one physics idea through an everyday analogy (the kid on a swing).
    - **Consequence:** the rule it created.
    - **Callback twist:** the ending.
    - Never describe on screen what the viewer already sees.
-3. **Voice.** Record or generate `voice.wav`, then make its word timings `words.json` (any speech-to-text with word times).
-   - Put them in the project folder, e.g. `~/bridge-short/voice/`.
+3. **Voice (Vietnamese).** One script line per row in `~/<name>-short/voice/lines.txt`, then
+   `python templates/scripts/voice_vi.py ~/<name>-short/voice --voice "Hải Đăng"` (run with the `.venv-tts` Python
+   that has `vieneu` + `faster-whisper`; set it up as in the `idea-to-video` skill: `uv venv .venv-tts --python 3.12`,
+   `uv pip install vieneu faster-whisper soundfile numpy`).
+   - Writes `lines/pNN.wav`, `voice.wav` (48 kHz, lines joined with 0.35 s gaps), `words.json`
+     (`[{w, s, e}]`, one entry per Vietnamese syllable — the unit every reaction is timed to) and `check.md`.
+   - `check.md` compares each line with what Whisper heard. Listen to every ✗ line; re-generate only it with
+     `--only p07` (each VieNeu take has a slightly different melody, so never re-roll approved lines).
+   - Check the phonemes of every foreign name before generating (command in `idea-to-video/references/voice.md`).
+   - If the user has not chosen a voice: render one line with 6-10 voices (Hải Đăng, Thiện Minh, Thiền Tâm Đức,
+     Mai Anh, Ngọc Huyền, Quang Sơn, Thùy Dung…) and let them pick. Narration voice suits a deadpan storyteller.
    - Hand-fix the word timings. Everything is timed to words.json.
 4. **Shot plan** in `story.ts`: copy `templates/bridge/` (the final bridge source, same as `src/videos/bridge/` of your Remotion project) to `src/videos/<name>/`, register a new composition next to `BridgeShort` in `src/Root.tsx`, and rename it.
    - `SHOTS`: id, a/b frames, light day/golden, crowd mode, `tau` story time.
@@ -77,7 +94,8 @@ User rules that apply:
     - Mux with `-map 0:v:0 -map 1:a:0` (Remotion writes a silent audio track).
     - QA: `python scripts/short_qa.py final.mp4 out/<name>/qa shots.json` checks every frame for black, white, frozen and pop frames, plus loudness and sheets.
     - Fix anything it finds, then run a deep Opus audit.
-11. **Deliver.** SendUserFile the final mp4, update memory, write notes.
+11. **Deliver.** SendUserFile the final mp4 plus a Vietnamese title, description and hashtags (no reference channel
+    name), update memory, write notes.
 
 ## Final look values (bridge after 4 verifier rounds; all in `templates/bridge/`)
 Start every new short from `templates/bridge/` (copy to `src/videos/<name>/`): the look lives in these values, the
@@ -159,7 +177,8 @@ lighting 5-6, ink 6, textures 5-6, characters 7, depth 6-7, composition 6-7 (fro
 - Props or flotsam closer than ~2 m to a lens become huge cut-off blobs at the frame edge. When a camera moves, re-check
   every prop near its new position (the river cameras moved into the floating hats).
 - A foreground bush cut by the frame edge reads as a "green ball"; a foreground prop must be recognisable or gone.
-- Flags: red + yellow star/diamond reads as Vietnam's. Use a period-correct flag (St George's cross for England 1831).
+- Flags: red + yellow star/diamond reads as Vietnam's. Use a period-correct flag (St George's cross for England 1831); for a
+  Vietnamese story use the flag that is correct for that period and place.
 - Painted signs lit by a side sun go grey-blue and unreadable: give the sign face an unlit material.
 - Golden rim light done as an offset outer copy turns every hat into a picture frame: inner rim only, head/torso only.
 - Balcony/railing rails at chest height through characters: put the lens ~2.5 m up so rails cross legs, not torsos.

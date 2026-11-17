@@ -16,11 +16,11 @@ Private study only. Videos: vids/ (720p, original EN audio), transcripts: tx/, p
 3. **Escalation, 3-6 beats**: others laugh / doubt / mock (short in-character dialogue lines), stakes climb.
    1-2 exaggeration jokes per video (claim vs reality, "so slow X, and X was ...").
 4. **Mystery beat**: a question or "Wait, ...?" (~1 per video).
-5. **Pivot word "You see,"** (14 of 20 videos) → the real mechanism. Often an everyday analogy
+5. **Pivot word "You see,"** (14 of 20 videos) → the real mechanism. Vietnamese: "Bạn thấy đấy," / "Chuyện là thế này:"; analogy opener "Bạn từng … chưa?". Often an everyday analogy
    ("Ever ...?", "think about the last time ...", "picture your body as ...").
 6. **Ironic payoff** in the last 1-2 sentences, short, lands the twist. Video ends on the last word.
 - Two modes: story mode (third person "he", named everyman, present tense) and "Imagine you're..." second person.
-- Sentences ~13.5 words median, plain spoken English, contractions, no jargon unless explained in the next clause.
+- Sentences ~13.5 words median, plain spoken English, contractions, no jargon unless explained in the next clause. (For our Vietnamese shorts: plain spoken Vietnamese, ~4 syllables/s, same sentence rhythm.)
 
 ## Picture
 - 2D flat cartoon characters (simple outlined faces, thin black outline, flat colors) standing in **3D toon environments**.
