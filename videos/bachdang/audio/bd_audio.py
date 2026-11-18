@@ -181,7 +181,7 @@ mix = v + music * gm * duck + sfx * gs
 G0 = 10 ** ((-15.0 - integrated(mix)) / 20)
 mix *= G0
 pk = np.max(np.abs(mix))
-ceil = 10 ** (-1.5 / 20)
+ceil = 10 ** (-2.4 / 20)
 if pk > ceil:  # soft-knee peak control
     env = ndimage.maximum_filter1d(np.max(np.abs(mix), 0), ns(0.004))
     env = ndimage.uniform_filter1d(np.maximum(env, ceil), ns(0.006))
