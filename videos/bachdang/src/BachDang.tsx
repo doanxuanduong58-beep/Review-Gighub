@@ -53,7 +53,7 @@ const Inner: React.FC<{ id: number }> = ({ id }) => {
     grade: new GradeEffect(GRADES.day, GRADE_STRENGTH.day),
     grain: new GrainEffect({ amount: 0.025, cellPx: 1.5 }), // film grain, OFF by default (inputProps post.grain): the reference measures no grain and it quadruples the file size
   }), [camera, scene]);
-  useEffect(() => () => fx.ink.dispose(), [fx]);
+  useEffect(() => () => { const ink = fx.ink as unknown as { dispose?: () => void }; try { if (typeof ink.dispose === "function") ink.dispose(); } catch { /* already gone */ } }, [fx]);
   const post = useMemo(() => (
     <EffectComposer multisampling={msaa()}>
       {on.ink ? <primitive object={fx.ink} dispose={null} /> : null}
